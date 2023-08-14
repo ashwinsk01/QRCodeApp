@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Html5QrcodeScanner } from 'html5-qrcode';
+import Button from "./Button";
+import Container from "./Container";
 import styled from "styled-components";
-
-const Container = styled.div`
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: linear-gradient(to bottom, #f4f6f9, #e3e8ec);
-`;
 
 const ScannerContainer = styled.div`
   background: white;
@@ -31,21 +26,6 @@ const ScannerHeading = styled.h2`
   margin-bottom: 20px;
 `;
 
-const Button = styled.button`
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
-
 const ResultText = styled.p`
   /* Add your styling for the result text here */
 `;
@@ -53,20 +33,28 @@ const ResultText = styled.p`
 const ConfirmationMessage = styled.p`
   font-size: 24px;
   margin-top: 20px;
-  color: #4caf50; /* Green color for success */
 `;
 
-const QRCodeScanner = () => {
+const QRCodeScanner = (props) => {
     const [scannedCode, setScannedCode] = useState("");
+    const [name, setName] = useState(null);
 
     useEffect(() => {
         const qrCodeScanner = new Html5QrcodeScanner(
-            "qr-reader", { fps: 10, qrbox: 500 });
+            "qr-reader", { fps: 10, qrbox: 250 });
         qrCodeScanner.render(onScanSuccess);
     }, []);
 
     const onScanSuccess = (scannedText) => {
         setScannedCode(scannedText);
+        props.data.map((item) => {
+          if (item.fields.UID === scannedText) {
+            setName(item.fields.FName+' '+item.fields['Last Name']);
+          }
+          else {
+            console.log('not found');
+          }
+        });
     };
 
     const handleScanAgain = () => {
@@ -80,13 +68,16 @@ const QRCodeScanner = () => {
         <ScannerHeading>Scan QR Code</ScannerHeading>
         {scannedCode ? (
           <>
-            <ConfirmationMessage>Thank you for checking in!</ConfirmationMessage>
+            {name ?
+            <ConfirmationMessage className = 'success'>Thank you for checking in {name}!</ConfirmationMessage>
+            :
+            <ConfirmationMessage className = 'failed'>Sorry, we could not find your name in our database.</ConfirmationMessage>
+          }
             <Button onClick={handleScanAgain}>Scan Another Code</Button>
           </>
         ) : (
           <>
             <div id="qr-reader"></div>
-            {scannedCode && <ResultText>Scanned Code: {scannedCode}</ResultText>}
           </>
         )}
       </ScannerContainer>
