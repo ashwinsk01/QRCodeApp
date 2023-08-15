@@ -4,21 +4,34 @@ import React, {useState, useEffect} from 'react';
 import Header from './Components/Header';
 import QRCodeScanner from './Components/QRCodeScanner';
 import Welcome from './Components/Welcome';
+import axios from 'axios';
 
 function App() {
 
   const [data, setData] = useState([]);
+  const apiKey = 'keyehEHqol0lqaHF2';
+  const baseId = 'apptQkP0WMD6DrYo1';
+  const table = 'tblVdppLxEOhNWMuH';
 
   useEffect(() => {
-    fetch("https://api.airtable.com/v0/apptQkP0WMD6DrYo1/Table%201?api_key=keyehEHqol0lqaHF2")
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data.records);
-        console.log(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const fetchRecords = async () => {
+      try {
+        const response = await axios.get(
+          `https://api.airtable.com/v0/${baseId}/${table}`,
+          {
+            headers: {
+              Authorization: `Bearer ${apiKey}`,
+            },
+          }
+        );
+
+        setData(response.data.records);
+      } catch (error) {
+        console.error('Error fetching records:', error);
+      }
+    };
+
+    fetchRecords();
   }, []);
 
   const [home, setHome] = useState(true);
@@ -36,6 +49,6 @@ function App() {
 
 export default App;
 
-//api key = patk9RHh33ur5LlAQ
+//api key = keyehEHqol0lqaHF2
 //base id = apptQkP0WMD6DrYo1
 //table id = tblVdppLxEOhNWMuH

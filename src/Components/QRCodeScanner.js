@@ -3,6 +3,7 @@ import { Html5QrcodeScanner } from 'html5-qrcode';
 import Button from "./Button";
 import Container from "./Container";
 import styled from "styled-components";
+import ReScan from './ReScan';
 
 const ScannerContainer = styled.div`
   background: white;
@@ -26,15 +27,6 @@ const ScannerHeading = styled.h2`
   margin-bottom: 20px;
 `;
 
-const ResultText = styled.p`
-  /* Add your styling for the result text here */
-`;
-
-const ConfirmationMessage = styled.p`
-  font-size: 24px;
-  margin-top: 20px;
-`;
-
 const QRCodeScanner = (props) => {
     const [scannedCode, setScannedCode] = useState("");
     const [name, setName] = useState(null);
@@ -49,7 +41,8 @@ const QRCodeScanner = (props) => {
         setScannedCode(scannedText);
         props.data.map((item) => {
           if (item.fields.UID === scannedText) {
-            setName(item.fields.FName+' '+item.fields['Last Name']);
+            setName({fullname: item.fields.FName+' '+item.fields['Last Name'],
+                      id: item.id});
           }
           else {
             console.log('not found');
@@ -69,9 +62,9 @@ const QRCodeScanner = (props) => {
         {scannedCode ? (
           <>
             {name ?
-            <ConfirmationMessage className = 'success'>Thank you for checking in {name}!</ConfirmationMessage>
+            <ReScan className = 'success' id = {name.id}>Thank you for checking in {name.fullname}!</ReScan>
             :
-            <ConfirmationMessage className = 'failed'>Sorry, we could not find your name in our database.</ConfirmationMessage>
+            <ReScan className = 'failed'>Sorry, we could not find your name in our database.</ReScan>
           }
             <Button onClick={handleScanAgain}>Scan Another Code</Button>
           </>
