@@ -18,7 +18,7 @@ const ReScan = props => {
 	     	const updateData = {
 	        	fields: {
 	        		// Update the fields you want to change
-	        		FName: 'Dishantss',
+	        		'Entered Status': 1,
 	        	},
 	      	};
 

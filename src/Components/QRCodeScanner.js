@@ -42,7 +42,8 @@ const QRCodeScanner = (props) => {
         props.data.map((item) => {
           if (item.fields.UID === scannedText) {
             setName({fullname: item.fields.FName+' '+item.fields['Last Name'],
-                      id: item.id});
+                      id: item.id,
+                      entered: item.fields.entered});
           }
           else {
             console.log('not found');
@@ -62,7 +63,11 @@ const QRCodeScanner = (props) => {
         {scannedCode ? (
           <>
             {name ?
-            <ReScan className = 'success' id = {name.id}>Thank you for checking in {name.fullname}!</ReScan>
+              name.entered===0 ?
+              <ReScan className = 'success' id = {name.id}>Thank you for checking in {name.fullname}!</ReScan>
+              :
+              <ReScan className = 'failed' id = {name.id}>{name.fullname}, you've already checked in.</ReScan>
+            
             :
             <ReScan className = 'failed'>Sorry, we could not find your name in our database.</ReScan>
           }
