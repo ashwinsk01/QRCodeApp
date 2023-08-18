@@ -43,7 +43,7 @@ const QRCodeScanner = (props) => {
           if (item.fields.UID === scannedText) {
             setName({fullname: item.fields.FName+' '+item.fields['Last Name'],
                       id: item.id,
-                      entered: item.fields.entered});
+                      entered: item.fields['Entered Status']});
           }
           else {
             console.log('not found');
