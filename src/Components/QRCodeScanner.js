@@ -35,6 +35,7 @@ const QRCodeScanner = (props) => {
         const qrCodeScanner = new Html5QrcodeScanner(
             "qr-reader", { fps: 10, qrbox: 250 });
         qrCodeScanner.render(onScanSuccess);
+         // eslint-disable-next-line
     }, []);
 
     const onScanSuccess = (scannedText) => {
@@ -44,9 +45,11 @@ const QRCodeScanner = (props) => {
             setName({fullname: item.fields.FName+' '+item.fields['Last Name'],
                       id: item.id,
                       entered: item.fields['Entered Status']});
+            return null;
           }
           else {
             console.log('not found');
+            return null;
           }
         });
     };
